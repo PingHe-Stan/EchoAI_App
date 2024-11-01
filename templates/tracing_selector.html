@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Comparison</title>
+    <style>
+        /* Container to hold the images and buttons */
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 80%; /* Total width of the container */
+            margin-left: auto;
+            margin-right: auto;
+            flex-wrap: wrap; /* Ensure wrapping on smaller screens */
+        }
+
+        /* Each image should take 49% of the width, with auto height */
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto; /* Maintain the aspect ratio */
+        }
+        
+        .image-container-2 {
+            display: flex;
+            justify-content: center; /* Center the button and image horizontally */
+            align-items: center;
+            flex-direction: column; /* Stack the button and image vertically */
+            margin-top: 20px;
+            width: 50%; /* Total width of the container */
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center; /* Center align the button text */
+        }
+
+        .image-container-2 img {
+            display: none; /* Hide the image initially */
+            width: 100%;
+            height: auto; /* Maintain the aspect ratio */
+        }
+
+        .button-container {
+            text-align: center;
+            width: 49%;
+        }
+
+        .button-container button {
+
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: block;
+	    cursor: pointer;
+            margin-left: auto;
+            margin-right: auto;
+	    background-color: #007bff;
+	    color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .button-container-both {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+	
+	.both-button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+	
+	.button:hover {
+            background-color: #0056b3;
+        }
+
+        .progress-bar {
+            width: 80%;
+            background-color: #f3f3f3;
+            margin: 20px auto;
+        }
+
+	.progress-bar-fill {
+    		height: 20px;
+    		background-color: #4caf50;
+    		width: {{ progress }}%;
+    		display: flex;
+    		align-items: center;
+    		justify-content: center;
+    		color: white;
+    		font-weight: bold;
+	}
+
+	.progress-text {
+   	     position: absolute;
+	}
+
+        @media (max-width: 768px) {
+            .image-container {
+                flex-direction: column;
+            }
+
+            .image-container img,
+            .button-container {
+                max-width: 100%;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-container">
+	{% for button in buttons %}
+        <div class="button-container">
+            <button onclick="selectImage('{{ button.label }}')">{{ button.display }}</button>
+            <img src="{{ url_for('static', filename=button.img) }}" alt="Image">
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="button-container-both">
+            <button class="both-button" onclick="selectImage('failed')"> Both are 👎 </button>
+            <button class="both-button" onclick="selectImage('acceptable')">Both are 👌</button>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-bar-fill">
+	    <span class="progress-text">{{ progress }}%</span>
+	</div>
+    </div>
+
+    <div class="image-container-2">
+        <button id="toggleButton">Show Overlay</button>
+        <img id="overlayImage" src="{{ url_for('static', filename=img3_name) }}" alt="Image Mix">
+    </div>
+
+    <script>
+	 function randomizeButtons() {
+            const imageContainer = document.getElementById('image-container');
+            const buttonContainers = Array.from(document.getElementsByClassName('button-container'));
+
+            // Randomize the order of the button containers
+            buttonContainers.sort(() => Math.random() - 0.5);
+
+            // Append the button containers back in the randomized order
+            buttonContainers.forEach(container => {
+                imageContainer.appendChild(container);
+            });
+        }
+
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            var image = document.getElementById('overlayImage');
+            var button = document.getElementById('toggleButton');
+            
+            if (image.style.display === 'none') {
+                image.style.display = 'block';
+                button.textContent = 'Hide Overlay';
+            } else {
+                image.style.display = 'none';
+                button.textContent = 'Show Overlay';
+            }
+        });
+
+        function selectImage(selection) {
+            fetch('/select_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selection: selection }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = data.next;
+            });
+        };
+    </script>
+</body>
+</html>
