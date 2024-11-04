@@ -41,15 +41,7 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
 
 # Dummy user store
 users = {
-    'sk': generate_password_hash('echo'),
-    'lauren': generate_password_hash('echo'),
-    'stan': generate_password_hash('echo'),
-    'wei': generate_password_hash('echo'),
-    'faith': generate_password_hash('echo'),
-    'mariella': generate_password_hash('echo'),
-    'rakhika': generate_password_hash('echo'),
-    'luc': generate_password_hash('echo'),
-    'mark': generate_password_hash('echo')
+    'user': generate_password_hash('password'),
 }
 
 

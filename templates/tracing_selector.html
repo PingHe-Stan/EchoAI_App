@@ -146,19 +146,7 @@
     </div>
 
     <script>
-	 function randomizeButtons() {
-            const imageContainer = document.getElementById('image-container');
-            const buttonContainers = Array.from(document.getElementsByClassName('button-container'));
-
-            // Randomize the order of the button containers
-            buttonContainers.sort(() => Math.random() - 0.5);
-
-            // Append the button containers back in the randomized order
-            buttonContainers.forEach(container => {
-                imageContainer.appendChild(container);
-            });
-        }
-
+        
         document.getElementById('toggleButton').addEventListener('click', function() {
             var image = document.getElementById('overlayImage');
             var button = document.getElementById('toggleButton');
