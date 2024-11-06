@@ -18,7 +18,7 @@ cd EchoAI_App
 ```
 # Pip and Venv
 python -m venv echoaiapp
-source view/bin/activate
+source echoaiapp/bin/activate
 pip install -r requirements.txt
 ```
 
